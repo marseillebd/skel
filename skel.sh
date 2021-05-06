@@ -122,9 +122,15 @@ replace() {
   local file newfile
   find . -regex '.*@@@[A-Z0-9_]+\(=\$([^()])\)?@@@.*' | while IFS='' read -r file; do
     newfile="$(echo "$file" | sed "s/@@@${hole}\(=\$([^)]*)\)\?@@@/$value/g")"
-    mv -v "$file" "$newfile"
+    if [ "$file" != "$newfile" ]; then
+      mv -v "$file" "$newfile"
+    fi
   done
-  sed -i "s"$'\v'"@@@${hole}\(=\$([^)]*)\)\?@@@"$'\v'"$value"$'\v'"g" ./**/*
+  for file in ./**/*; do
+    if [ -f "$file" ]; then
+      sed -i "s"$'\v'"@@@${hole}\(=\$([^)]*)\)\?@@@"$'\v'"$value"$'\v'"g" "$file"
+    fi
+  done
 }
 
 main "$@"
