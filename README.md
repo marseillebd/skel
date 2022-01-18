@@ -14,12 +14,8 @@ Skeleton files/folders are stored in `${XDG_CONFIG_HOME:-$HOME/.config}/skel`.
 The first level of directories in this folder are called "packages".
 All the files and folders under a package are valid templates.
 
-  * `skel list`: List all packages, one per line.
-  * `skel list <PKG>`: List all valid templates from the given package, one per line.
-  * `skel mk <PKG> <TEMPLATE PATH>`: Copy a template (unchanged) into the present working directory.
-  * `skel mk <PKG>`: The default template is stored under `<PKG>/default`.
-  * `skel read <PKG>`: Search the present working directory (and all sub-directories) for template holes.
-    Then, prompt the user at the commandline for values for each hole.
+The `skel` program takes a command, one of `list`, `mk`, or `read`.
+Run skel `--help` for a full listing of the commands and their options/arguments.
 
 ## Template Language
 
