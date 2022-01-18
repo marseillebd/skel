@@ -5,7 +5,7 @@ Script to manage skeleton files/directories using little more than a simple file
 ## Install
 
 ```sh
-wget https://raw.githubusercontent.com/Zankoku-Okuno/skel/master/skel.sh -O ~/bin/skel
+wget https://raw.githubusercontent.com/edemko/skel/master/skel.sh -O ~/bin/skel
 ```
 
 ## Usage
