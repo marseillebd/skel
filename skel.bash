@@ -22,7 +22,7 @@ top_help() {
   echo "  skel [-h | --help | help]           show help text"
   echo "  skel [-V | --version]               show version number"
   echo "See the readme for more information about concepts and configuration:"
-  echo "  https://github.com/edemko/skel/blob/master/README.md"
+  echo "  https://github.com/marseillebd/skel/blob/master/README.md"
 }
 
 main() {
@@ -81,7 +81,6 @@ skel_read() {
       grep 2>/dev/null -r -oh "$fileGrepRegex" .
     } | sort -u
   )"
-  echo >&2 "$prevars"
   vars=''
   while IFS='' read -r hole; do
     hole="${hole#@@@}"
@@ -173,10 +172,14 @@ replace() {
   hole="$1"
   value="$2"
   local file newfile
-  find . -regex "$fileFindRegex" | while IFS='' read -r file; do
-    newfile="$( echo "$file" | sed "s"$'\v'"$(sedRegex "$hole")"$'\v'"$value"$'\v'"g" )"
-    if [ "$file" != "$newfile" ]; then
-      mv -v "$file" "$newfile"
+  find . -regex "$fileFindRegex" | tac | while IFS='' read -r file; do
+    # we have to iterate bottom-up or a `mv` higher up the filesystem will invalidate a path to a `mv` lower down
+    # `find -regex` matches against the whole path, not single crumbs, so we have to check the basename
+    if basename "$file" | grep -q "$fileGrepRegex"; then
+      newfile="$( echo "$file" | sed "s"$'\v'"$(sedRegex "$hole")"$'\v'"$value"$'\v'"g" )"
+      if [ "$file" != "$newfile" ]; then
+        mv -v "$file" "$newfile"
+      fi
     fi
   done
   for file in ./**/*; do
